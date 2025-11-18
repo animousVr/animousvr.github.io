@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be Mine?</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffe6f2, #e6f7ff, #f0e6ff);
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+        .heart-icon {
+            font-size: 4rem;
+            color: #ff69b4;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        .proposal-text {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff1493;
+            margin: 20px 0;
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+            animation: twinkle 1.5s ease-in-out infinite;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(255, 105, 180, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 105, 180, 1); }
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .buttons {
+            margin-top: 40px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 0 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #yes-btn {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            color: white;
+        }
+        #yes-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(255, 105, 180, 0.4);
+        }
+        #no-btn {
+            background: linear-gradient(45deg, #ccc, #999);
+            color: #333;
+            position: absolute;
+            transition: all 0.2s ease;
+        }
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            color: #ff69b4;
+            animation: float 6s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        .rain {
+            position: absolute;
+            font-size: 2rem;
+            animation: rain 3s linear infinite;
+            z-index: 5;
+        }
+        @keyframes rain {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+        .spray {
+            position: absolute;
+            bottom: 0;
+            font-size: 2rem;
+            animation: spray 2s ease-out;
+            z-index: 5;
+        }
+        @keyframes spray {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+        .timer-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        .celebration {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 20px;
+        }
+        .celebration h1 {
+            font-size: 4rem;
+            color: #ff1493;
+            margin: 0;
+        }
+        .celebration p {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 10px 0;
+        }
+        .celebration .journey {
+            font-size: 1cm;
+            color: #4169e1;
+            font-style: italic;
+        }
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="hearts"></div>
+    <div class="container" id="main-container">
+        <div class="heart-icon">❤️‍🩹</div>
+        <div class="proposal-text">WILL U BE MINE ? 🥺</div>
+        <div class="buttons">
+            <button id="yes-btn">Yes</button>
+            <button id="no-btn">No</button>
+        </div>
+    </div>
+    <div class="timer-box" id="timer">00:00:00:00</div>
+    <div class="celebration" id="celebration">
+        <p>you made me the happiest person on earth</p>
+        <h1>Yay Aashiqa 🎊⚘️</h1>
+        <p class="journey">This is just the beginning of our beautiful journey ..❣️❣️</p>
+    </div>
+    <audio id="romantic-music" loop>
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+    </audio>
+
+    <script>
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDelay = Math.random() * 6 + 's';
+            document.getElementById('hearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHeart, 1000);
+
+        const noBtn = document.getElementById('no-btn');
+        const messages = ["Think again 😏", "Give me a chance 😘", "Are you sure? 👀", "Don’t break my heart 💔", "You might regret", "U can't 😌"];
+        let messageIndex = 0;
+
+        function dodgeNo() {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = Math.random() * (window.innerHeight - 100);
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            noBtn.innerText = messages[messageIndex % messages.length];
+            messageIndex++;
+            noBtn.style.background = `hsl(${Math.random() * 360}, 70%, 80%)`;
+            noBtn.style.fontSize = (1 + Math.random()) + 'rem';
+            noBtn.style.borderRadius = Math.random() * 50 + 'px';
+        }
+
+        noBtn.addEventListener('mouseenter', dodgeNo);
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            dodgeNo();
+        });
+
+        document.getElementById('yes-btn').addEventListener('click', () => {
+            document.getElementById('main-container').style.display = 'none';
+            document.getElementById('celebration').style.display = 'block';
+            document.getElementById('timer').style.display = 'block';
+            document.getElementById('romantic-music').play();
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const emoji = document.createElement('div');
+                    emoji.className = 'rain';
+                    emoji.innerHTML = ['❤️', '🌸', '😍', '🥰'][Math.floor(Math.random() * 4)];
+                    emoji.style.left = Math.random() * 100 + 'vw';
+                    document.body.appendChild(emoji);
+                    setTimeout(() => emoji.remove(), 3000);
+                }, i * 100);
+            }
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const emoji = document.createElement('div');
+                    emoji.className = 'spray';
+                    emoji.innerHTML = ['🌷', '⚘️', '🪻', '🎉', '🎊'][Math.floor(Math.random() * 5)];
+                    emoji.style.left = Math.random() * 100 + 'vw';
+                    document.body.appendChild(emoji);
+                    setTimeout(() => emoji.remove(), 2000);
+                }, i * 100);
+            }
+        });
+
+        function updateTimer() {
+            const startDate = new Date('2024-02-02T00:00:00');
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('timer').innerText =
+                `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
