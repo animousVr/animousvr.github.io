@@ -6,94 +6,104 @@
     <title>Will You Be Mine?</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ffe6f2, #e6f7ff, #f0e6ff);
-            overflow: hidden;
-            position: relative;
-            height: 100vh;
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0, #fd79a8, #e84393);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #333;
-        }
-        .container {
-            text-align: center;
-            z-index: 10;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
             position: relative;
         }
-        .heart-icon {
-            font-size: 4rem;
-            color: #ff69b4;
-            animation: glow 2s ease-in-out infinite alternate;
+        .initial-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .proposal-text {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #ff1493;
-            margin: 20px 0;
-            text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
-            animation: twinkle 1.5s ease-in-out infinite;
+        .celebration-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.5); /* 50% transparency behind text */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+        .glowing-text {
+            font-size: 3em;
+            color: #fff;
+            text-shadow: 0 0 10px #ff6b6b, 0 0 20px #ff6b6b, 0 0 30px #ff6b6b;
+            animation: glow 2s ease-in-out infinite alternate;
+            margin-bottom: 20px;
         }
         @keyframes glow {
-            from { text-shadow: 0 0 10px rgba(255, 105, 180, 0.5); }
-            to { text-shadow: 0 0 20px rgba(255, 105, 180, 1); }
+            from { text-shadow: 0 0 10px #ff6b6b; }
+            to { text-shadow: 0 0 20px #ff6b6b, 0 0 30px #ff6b6b; }
         }
-        @keyframes twinkle {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        .buttons {
-            margin-top: 40px;
-        }
-        button {
-            padding: 15px 30px;
-            font-size: 1.5rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            margin: 0 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        #yes-btn {
-            background: linear-gradient(45deg, #ff69b4, #ff1493);
-            color: white;
-        }
-        #yes-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(255, 105, 180, 0.4);
-        }
-        #no-btn {
-            background: linear-gradient(45deg, #ccc, #999);
-            color: #333;
-            position: absolute;
-            transition: all 0.2s ease;
-        }
-        .floating-hearts {
+        .twinkling-stars {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
         }
-        .heart {
+        .star {
             position: absolute;
-            font-size: 2rem;
-            color: #ff69b4;
-            animation: float 6s linear infinite;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        .buttons {
+            display: flex;
+            gap: 50px; /* Keeps buttons separate */
+            margin: 20px 0;
+        }
+        button {
+            font-size: 1.5em;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        #yesBtn {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        #yesBtn:hover {
+            transform: scale(1.1);
+        }
+        #noBtn {
+            background: linear-gradient(45deg, #a8e6cf, #dcedc8);
+            color: #333;
+            transition: all 0.5s ease;
+        }
+        .floating-hearts {
+            position: absolute;
+            font-size: 2em;
+            animation: float 3s infinite;
+            pointer-events: none;
         }
         @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
         }
-        .rain {
+        .rain-emoji {
             position: absolute;
-            font-size: 2rem;
+            font-size: 2em;
             animation: rain 3s linear infinite;
             z-index: 5;
         }
@@ -101,159 +111,198 @@
             0% { transform: translateY(-100vh); }
             100% { transform: translateY(100vh); }
         }
-        .spray {
+        .spray-emoji {
             position: absolute;
-            bottom: 0;
-            font-size: 2rem;
-            animation: spray 2s ease-out;
+            font-size: 2em;
+            animation: spray 2s ease-out forwards;
             z-index: 5;
         }
         @keyframes spray {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100vh); opacity: 0; }
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        }
+        .popup {
+            position: absolute;
+            font-size: 20em; /* Big size to cover half screen */
+            z-index: 20;
+            animation: popupShake 2s ease-in-out forwards;
+        }
+        @keyframes popupShake {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            25% { transform: translateY(50vh) scale(1.2); }
+            50% { transform: translateY(50vh) scale(1); }
+            75% { transform: translateY(50vh) scale(1.2); }
+            100% { transform: translateY(-100vh) scale(0); opacity: 0; }
+        }
+        .zoom-heart {
+            position: absolute;
+            font-size: 20em;
+            z-index: 15;
+            animation: zoomOut 2s ease-out forwards;
+        }
+        @keyframes zoomOut {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(5); opacity: 0; }
         }
         .timer-box {
-            position: fixed;
+            position: absolute;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
             background: rgba(255, 255, 255, 0.8);
-            padding: 10px 20px;
+            padding: 10px;
             border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #333;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 1.2em;
             display: none;
         }
         .celebration {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 20;
-            background: rgba(255, 255, 255, 0.5);
-            padding: 20px;
-            border-radius: 20px;
+            margin-top: 20px;
         }
-        .celebration h1 {
-            font-size: 4rem;
-            color: #ff1493;
-            margin: 0;
-        }
-        .celebration p {
-            font-size: 1.5rem;
+        .medium-text {
+            font-size: 2em;
             color: #333;
-            margin: 10px 0;
+            font-weight: bold;
         }
-        .celebration .journey {
-            font-size: 1cm;
-            color: #4169e1;
-            font-style: italic;
+        .big-text {
+            font-size: 4em;
+            color: #e91e63;
+            font-weight: bold;
         }
-        audio {
-            display: none;
+        .end-text {
+            font-size: 1cm; /* 1cm size as requested */
+            color: #007bff; /* Romantic blue */
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="floating-hearts" id="hearts"></div>
-    <div class="container" id="main-container">
-        <div class="heart-icon">❤️‍🩹</div>
-        <div class="proposal-text">WILL U BE MINE ? 🥺</div>
+    <div class="twinkling-stars" id="stars"></div>
+    <div class="initial-view" id="initialView">
+        <div class="glowing-text">❤️‍🩹</div>
+        <div class="glowing-text">WILL U BE MINE ? 🥺</div>
         <div class="buttons">
-            <button id="yes-btn">Yes</button>
-            <button id="no-btn">No</button>
+            <button id="yesBtn">Yes! 😍</button>
+            <button id="noBtn">No 😢</button>
         </div>
     </div>
-    <div class="timer-box" id="timer">00:00:00:00</div>
-    <div class="celebration" id="celebration">
-        <p>you made me the happiest person on earth</p>
-        <h1>Yay Aashiqa 🎊⚘️</h1>
-        <p class="journey">This is just the beginning of our beautiful journey ..❣️❣️</p>
+    <div class="celebration-view" id="celebrationView">
+        <div class="celebration">
+            <div class="medium-text">You made me the happiest person on earth</div>
+            <div class="big-text">hurray 🎊⚘️</div>
+            <div class="end-text">Aashiqa This is just the beginning of our beautiful journey ..❣️❣️</div>
+        </div>
+        <div class="timer-box" id="timerBox">since i love u: <span id="timer">0d 0h 0m 0s</span></div>
     </div>
-    <audio id="romantic-music" loop>
-        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav">
+
+    <audio id="romanticMusic" loop preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/romantic-piano-01.wav" type="audio/wav"> <!-- Placeholder for soft romantic sound; replace with a real Talwinder Singh song URL if available -->
+        Your browser does not support the audio element.
     </audio>
 
     <script>
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDelay = Math.random() * 6 + 's';
-            document.getElementById('hearts').appendChild(heart);
-            setTimeout(() => heart.remove(), 6000);
+        // Twinkling stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            starsContainer.appendChild(star);
         }
-        setInterval(createHeart, 1000);
 
-        const noBtn = document.getElementById('no-btn');
+        // Floating hearts
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'floating-hearts';
+            heart.textContent = '❤️';
+            heart.style.left = Math.random() * 100 + '%';
+            document.body.appendChild(heart);
+            setTimeout(() => document.body.removeChild(heart), 3000);
+        }, 1000);
+
+        // No button dodge and changes
+        const noBtn = document.getElementById('noBtn');
         const messages = ["Think again 😏", "Give me a chance 😘", "Are you sure? 👀", "Don’t break my heart 💔", "You might regret", "U can't 😌"];
         let messageIndex = 0;
-
-        function dodgeNo() {
-            const x = Math.random() * (window.innerWidth - 100);
-            const y = Math.random() * (window.innerHeight - 100);
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-            noBtn.innerText = messages[messageIndex % messages.length];
+        noBtn.addEventListener('mouseenter', () => {
+            noBtn.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px)`;
+            noBtn.textContent = messages[messageIndex % messages.length];
             messageIndex++;
             noBtn.style.background = `hsl(${Math.random() * 360}, 70%, 80%)`;
-            noBtn.style.fontSize = (1 + Math.random()) + 'rem';
+            noBtn.style.fontSize = Math.random() * 0.5 + 1.5 + 'em';
             noBtn.style.borderRadius = Math.random() * 50 + 'px';
-        }
-
-        noBtn.addEventListener('mouseenter', dodgeNo);
-        noBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            dodgeNo();
         });
 
-        document.getElementById('yes-btn').addEventListener('click', () => {
-            document.getElementById('main-container').style.display = 'none';
-            document.getElementById('celebration').style.display = 'block';
-            document.getElementById('timer').style.display = 'block';
-            document.getElementById('romantic-music').play();
-
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const emoji = document.createElement('div');
-                    emoji.className = 'rain';
-                    emoji.innerHTML = ['❤️', '🌸', '😍', '🥰'][Math.floor(Math.random() * 4)];
-                    emoji.style.left = Math.random() * 100 + 'vw';
-                    document.body.appendChild(emoji);
-                    setTimeout(() => emoji.remove(), 3000);
-                }, i * 100);
-            }
-
+        // Yes button click - change page
+        document.getElementById('yesBtn').addEventListener('click', function() {
+            document.getElementById('initialView').style.display = 'none';
+            document.getElementById('celebrationView').style.display = 'flex';
+            document.getElementById('timerBox').style.display = 'block';
+            
+            // Play music
+            document.getElementById('romanticMusic').play();
+            
+            // Popup 🥳 from below, shake for 2 sec, then disappear
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+            popup.textContent = '🥳';
+            popup.style.left = '50%';
+            popup.style.transform = 'translateX(-50%)';
+            document.body.appendChild(popup);
+            setTimeout(() => {
+                document.body.removeChild(popup);
+                // Zoom out 💖 to the screen
+                const zoomHeart = document.createElement('div');
+                zoomHeart.className = 'zoom-heart';
+                zoomHeart.textContent = '💖';
+                zoomHeart.style.left = '50%';
+                zoomHeart.style.top = '50%';
+                zoomHeart.style.transform = 'translate(-50%, -50%)';
+                document.body.appendChild(zoomHeart);
+                setTimeout(() => document.body.removeChild(zoomHeart), 2000);
+            }, 2000);
+            
+            // Spray emojis for 2 seconds
+            const sprayEmojis = ['🌷', '⚘️', '🪻', '🎉', '🎊'];
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
                     const emoji = document.createElement('div');
-                    emoji.className = 'spray';
-                    emoji.innerHTML = ['🌷', '⚘️', '🪻', '🎉', '🎊'][Math.floor(Math.random() * 5)];
-                    emoji.style.left = Math.random() * 100 + 'vw';
+                    emoji.className = 'spray-emoji';
+                    emoji.textContent = sprayEmojis[Math.floor(Math.random() * sprayEmojis.length)];
+                    emoji.style.left = Math.random() * 100 + '%';
                     document.body.appendChild(emoji);
-                    setTimeout(() => emoji.remove(), 2000);
+                    setTimeout(() => document.body.removeChild(emoji), 2000);
                 }, i * 100);
             }
-        });
-
-        function updateTimer() {
+            
+            // Rain emojis for 3 minutes
+            const emojis = ['❤️', '🌸', '😍', '🥰'];
+            let rainInterval = setInterval(() => {
+                for (let i = 0; i < 5; i++) {
+                    const emoji = document.createElement('div');
+                    emoji.className = 'rain-emoji';
+                    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    emoji.style.left = Math.random() * 100 + '%';
+                    emoji.style.animationDuration = Math.random() * 2 + 2 + 's';
+                    document.body.appendChild(emoji);
+                    setTimeout(() => document.body.removeChild(emoji), 3000);
+                }
+            }, 200);
+            setTimeout(() => clearInterval(rainInterval), 180000); // 3 minutes
+            
+            // Timer since Feb 2, 2024
             const startDate = new Date('2024-02-02T00:00:00');
-            const now = new Date();
-            const diff = now - startDate;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById('timer').innerText =
-                `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
+            setInterval(() => {
+                const now = new Date();
+                const diff = now - startDate;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('timer').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }, 1000);
+        });
     </script>
 </body>
 </html>
